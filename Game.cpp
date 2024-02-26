@@ -1,10 +1,17 @@
 #include "Game.hpp"
 
-SDL_Texture* temple = nullptr;
+//SDL_Texture* temple = nullptr;
+
+std::shared_ptr<Object> Player = nullptr;
+
+SDL_Renderer* Game::renderer = nullptr;
+
+
+
 
 Game::Game(const char* _title, int _screenWidth, int _screenHeight)
     : title(_title), screenWidth(_screenWidth), screenHeight(_screenHeight){
-
+    
     Game::InitWindow();
 }
 
@@ -28,7 +35,7 @@ bool Game::InitWindow() {
         return false;
     }
 
-
+   
     DrawObjects();
 
     return true;
@@ -36,21 +43,55 @@ bool Game::InitWindow() {
 
 void Game::DrawObjects() {
 
-    temple = Functions::LoadTexture("assets/temple.png", renderer);
+    Player = std::make_shared<Object>("assets/dog.png", 10, 10 );
 
 }
 
 void Game::HandleEvents() {
     SDL_Event event;
     SDL_PollEvent(&event);
+    keystate = SDL_GetKeyboardState(NULL);
+
     switch (event.type) {
     case SDL_QUIT:
         isRunning = false;
         break;
+    //case SDL_KEYDOWN:
+    //    switch (event.key.keysym.sym) {
+    //    case SDLK_RIGHT:
+    //        Player->SetX(movementSpeed);
+    //        break;
+    //    case SDLK_LEFT:
+    //        Player->SetX(movementSpeed * -1);
+    //        break;
+    //    case SDLK_UP:
+    //        Player->SetY(movementSpeed * -1);
+    //        break;
+    //    case SDLK_DOWN:
+    //        Player->SetY(movementSpeed);
+    //        break;
+    //    case (SDLK_DOWN && SDLK_RIGHT):
+    //        Player->SetX(movementSpeed);
+    //        Player->SetY(movementSpeed);
+        //default:
+        //    break;
+        //}
+
     default:
         break;
 
     }
+    
+    if      (keystate[SDL_SCANCODE_RIGHT] && keystate[SDL_SCANCODE_DOWN]) { Player->SetX(movementSpeed); Player->SetY(movementSpeed); }
+    else if (keystate[SDL_SCANCODE_RIGHT] && keystate[SDL_SCANCODE_UP]) { Player->SetX(movementSpeed); Player->SetY(movementSpeed * -1); }
+    else if (keystate[SDL_SCANCODE_LEFT] && keystate[SDL_SCANCODE_UP]) { Player->SetX(movementSpeed * -1 ); Player->SetY(movementSpeed * -1); }
+    else if (keystate[SDL_SCANCODE_LEFT] && keystate[SDL_SCANCODE_DOWN]) { Player->SetX(movementSpeed * -1); Player->SetY(movementSpeed); }
+    else if (keystate[Settings::SDL_SCANCODE_DOWNN])  Player->SetY(movementSpeed);
+    else if (keystate[Settings::SDL_SCANCODE_UPP]) Player->SetY(movementSpeed * -1);
+    else if (keystate[Settings::SDL_SCANCODE_LEFTT]) Player->SetX(movementSpeed * -1);
+    else if (keystate[Settings::SDL_SCANCODE_RIGHTT]) Player->SetX(movementSpeed);
+
+
 }
 
 void Game::Tick() {
@@ -64,6 +105,13 @@ void Game::Tick() {
 
 void Game::Update() { // Game logic
 
+    if (Player->GetX() + Player->GetW() >= screenWidth) {
+        Player->SetX(0, true);
+        Player->SetY(32);
+    } else {
+
+        //Player->SetX(1);
+    }
 
 }
 
@@ -71,7 +119,8 @@ void Game::Draw() {
     SDL_RenderClear(renderer);
     //
 
-    SDL_RenderCopy(renderer, temple, NULL, NULL);
+    //SDL_RenderCopy(renderer, temple, NULL, NULL);
+    Player->Draw();
 
     ///
     SDL_RenderPresent(renderer);

@@ -4,6 +4,8 @@
 #include <iostream>
 #include <memory>
 #include "Functions.hpp"
+#include "Object.hpp"
+#include "Settings.hpp"
 
 class Game {
 public:
@@ -15,17 +17,17 @@ public:
 	inline bool Running() { return isRunning; }
 	void DrawObjects();
 	void HandleEvents();
-
+	static SDL_Renderer* renderer;
 private:
 	// Window related
 	int screenWidth, screenHeight;
 	int windowFlags = SDL_RENDERER_ACCELERATED;
 	const char* title;
 	SDL_Window* window;
-	SDL_Renderer* renderer;
+	//SDL_Renderer* renderer;
 	//
 	bool isRunning;
-	
-
+	int movementSpeed = 8;
+	const Uint8* keystate = SDL_GetKeyboardState(NULL);
 
 };
