@@ -6,6 +6,7 @@
 #include "Functions.hpp"
 #include "Object.hpp"
 #include "Settings.hpp"
+#include "Map.hpp"
 
 class Game {
 public:

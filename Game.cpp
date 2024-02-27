@@ -5,7 +5,7 @@
 std::shared_ptr<Object> Player = nullptr;
 
 SDL_Renderer* Game::renderer = nullptr;
-
+std::shared_ptr<Map> map = nullptr;
 
 
 
@@ -44,6 +44,7 @@ bool Game::InitWindow() {
 void Game::DrawObjects() {
 
     Player = std::make_shared<Object>("assets/dog.png", 10, 10 );
+    map = std::make_shared<Map>();
 
 }
 
@@ -118,6 +119,7 @@ void Game::Update() { // Game logic
 void Game::Draw() {
     SDL_RenderClear(renderer);
     //
+    map->Draw();
 
     //SDL_RenderCopy(renderer, temple, NULL, NULL);
     Player->Draw();
